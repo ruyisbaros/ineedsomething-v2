@@ -1,7 +1,7 @@
-DIT="/home/ec2-user/advanced_mern_project-updated"
+DIT="/home/ec2-user/ineedsomething-v2"
 if [ -d "$DIT" ]; then
     cd /home/ec2-user
-    sudo rm -rf advanced_mern_project-updated
+    sudo rm -rf ineedsomething-v2
 else
     echo "File not found"
 fi

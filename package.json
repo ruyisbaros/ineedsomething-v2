@@ -11,7 +11,7 @@
     "dlt:all":"pm2 delete all",
     "dev": "nodemon -r tsconfig-paths/register src/app.ts | bunyan",
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandlers --watchAll=false",
-    "build": "ttsc -p . && cp .env.2 ./build/.env",
+    "build": "ttsc -p . && cp .env.develop ./build/.env",
     "seeds:dev": "npx ts-node src/seeds.ts",
     "seeds:prod": "npx ts-node ./build/src/seeds.js"
   },
