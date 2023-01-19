@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start":"NODE_ENV=production pm2 start ./build/src/app.js -i 5 --attach --watch | bunyan",
+    "start":"NODE_ENV=production pm2 start ./build/src/app.js -i 5  --watch | bunyan",
     "stop:app":"pm2 stop ./build/src/app.js",
     "dlt:app":"pm2 stop ./build/src/app.js",
     "stop:all":"pm2 stop all",

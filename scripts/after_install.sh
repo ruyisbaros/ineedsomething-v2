@@ -5,5 +5,4 @@ sudo rm -rf .env.develop
 aws s3 sync s3://needsomething-env-files/dev .
 unzip env-file.zip
 sudo cp .env.develop .env
-sudo pm2 delete all
 npm install
