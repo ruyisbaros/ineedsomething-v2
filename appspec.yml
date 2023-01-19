@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/advanced_mern_social_project/backend
+    destination: /home/ec2-user/ineedsomething-v2
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh

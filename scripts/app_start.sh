@@ -1,3 +1,3 @@
-cd /home/ec2-user/advanced_mern_project-updated
+cd /home/ec2-user/ineedsomething-v2
 sudo npm run build
 sudo npm start
