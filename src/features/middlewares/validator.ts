@@ -1,32 +1,36 @@
 import { Request, Response, NextFunction } from "express";
+import HTTP_STATUS from "http-status-codes";
 
 export const validateRegister = async (req: Request, res: Response, next: NextFunction) => {
-  const { username, email, password } = req.body;
-
+  const { username, email, password, avatarImage } = req.body;
+  //console.log(avatarImage)
   const errors = [];
   if (!username) {
-    errors.push("Please enter your username!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your username" });
   } else if (username.length > 20) {
-    errors.push("Username field can't be longer than 20 chars!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Username must be lower than 20 chars" });
+
   }
 
   if (!email) {
-    errors.push("Please enter your email!");
+
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your email!" });
   } else if (!validateEmail(email)) {
-    errors.push("Invalid email!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Invalid email!" });
   }
+
+  if (!avatarImage) {
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Avatar image can not be empty!" });
+  } 
 
   if (!password) {
-    errors.push("Please enter your password!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your password!" });
   } else if (password.length < 4) {
-    errors.push("Password field must be min 4 chars!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Password field must be min 4 chars!" });
+
   }
 
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -34,95 +38,72 @@ export const validateLogin = async (req: Request, res: Response, next: NextFunct
   const errors = [];
 
   if (!username) {
-    errors.push("Please enter your username!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your username!" });
   } else if (username.length > 20) {
-    errors.push("Username field can't be longer than 20 chars!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Username field can't be longer than 20 chars!" });
+
   }
 
   if (!password) {
-    errors.push("Please enter your password!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your password!" });
   } else if (password.length < 4) {
-    errors.push("Password field must be min 4 chars!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Password field must be min 4 chars!" });
   }
 
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 export const validatePasswordMail = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
   const errors = [];
   if (!email) {
-    errors.push("Please enter your email!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your email!" });
   } else if (!validateEmail(email)) {
-    errors.push("Invalid email!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Invalid email!" });
   }
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 export const validatePostWithImage = async (req: Request, res: Response, next: NextFunction) => {
   const { image } = req.body;
   const errors = [];
   if (!image) {
-    errors.push("Please upload your image!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Image can not be empty!" });
   }
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 
 export const validatePostWithVideo = async (req: Request, res: Response, next: NextFunction) => {
   const { video } = req.body;
   const errors = [];
   if (!video) {
-    errors.push("Please upload your video!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Video can not be empty!" });
   }
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 
 export const validateCommentOps = async (req: Request, res: Response, next: NextFunction) => {
   const { userTo, postId, comment } = req.body;
   const errors = [];
   if (!comment) {
-    errors.push("Please enter your comment!");
+    throw new Error("Please enter your comment!");
   }
   if (!postId) {
-    errors.push("Please enter postId!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter postId!" });
   }
   if (!userTo) {
-    errors.push("Please enter userTo!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter userTo!" });
   }
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 export const validateChatOps = async (req: Request, res: Response, next: NextFunction) => {
   const { receiverId, receiverUsername } = req.body;
   const errors = [];
   if (!receiverId) {
-    errors.push("Please enter your receiverId!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter your receiverId!" });
   }
   if (!receiverUsername) {
-    errors.push("Please enter receiverUsername!");
+    res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Please enter receiverUsername!" });
   }
-  if (errors.length > 0) {
-    return res.status(400).json(errors);
-  } else {
-    next();
-  }
+  next();
 };
 
 export function validateEmail(email: string) {
