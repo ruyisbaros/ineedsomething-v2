@@ -173,7 +173,7 @@ const postCtrl = {
     res.status(HTTP_STATUS.CREATED).json({ createdPost, message: "Post created with video successfully" });
   },
   getallPosts: async (req: Request, res: Response): Promise<void> => {
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 3;
     const { page } = req.params;
     const skip: number = (parseInt(page) - 1) * PAGE_SIZE;
     const limit: number = PAGE_SIZE * parseInt(page);

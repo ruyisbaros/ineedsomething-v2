@@ -82,6 +82,7 @@ const authCtrl = {
       const userSubject: IUserDocument = (await User.findOne({
         authId: user._id,
       }).select("-password")) as IUserDocument;
+      //console.log(userSubject)
       const jwtAccess: string = createAccessToken(user, userSubject._id as ObjectId);
       req.session = { jwt: jwtAccess };
       const userDocument: IUserDocument = {

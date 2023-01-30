@@ -63,7 +63,7 @@ class FollowerService {
 
       //Send client
       socketIONotificationObject.emit("insert notification", notifications, {
-        followingId,
+        userTo: followingId,
       });
       //Send notification email
       const params: INotificationTemplate = {
