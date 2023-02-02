@@ -75,7 +75,7 @@ const commentsCtrl = {
                 );
         res
             .status(HTTP_STATUS.CREATED)
-            .json({ message: "Post Comment Names", commentNames });
+            .json({ message: "Post Comment Names", commentNames: commentNames[0] });
     },
 
     getSingleComment: async (req: Request, res: Response): Promise<void> => {

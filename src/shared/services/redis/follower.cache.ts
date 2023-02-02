@@ -44,6 +44,7 @@ export class FollowersRedisCache extends BaseCache {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
+      //Going minus
       await this.client.HINCRBY(`users:${userId}`, prop, value);
     } catch (error) {
       log.error(error);
