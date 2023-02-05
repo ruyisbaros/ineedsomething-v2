@@ -22,7 +22,7 @@ const imageCtrl = {
       res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Image not uploaded" });
     }
 
-    const url = `https://res.cloudinary.com/ruyisbaros/image/upload/v${result.version}/${result.public_id}.jpg`;
+    const url = `https://res.cloudinary.com/ruyisbaros/image/upload/v${result.version}/${result.public_id}`;
 
     const cachedUser: IUserDocument = (await userCache.updateRelevantItemOfUserInCache(
       `${req.currentUser?.userId}`,
