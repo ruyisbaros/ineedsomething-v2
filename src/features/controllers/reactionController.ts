@@ -24,6 +24,7 @@ const reactionCtrl = {
       postReactions,
       profilePicture,
     } = req.body;
+    console.log(req.body)
     const reactionObjId: ObjectId = new ObjectId();
     const reactionObject: IReactionDocument = {
       _id: reactionObjId,

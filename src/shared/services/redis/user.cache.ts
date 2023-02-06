@@ -116,6 +116,14 @@ export class UserCache extends BaseCache {
       response.social = parseJson(`${response.social}`);
       response.followersCount = parseJson(`${response.followersCount}`);
       response.followingCount = parseJson(`${response.followingCount}`);
+      response.bgImageId = parseJson(`${response.bgImageId}`);
+      response.bgImageVersion = parseJson(`${response.bgImageVersion}`);
+      response.profilePicture = parseJson(`${response.profilePicture}`);
+      response.work = parseJson(`${response.work}`);
+      response.school = parseJson(`${response.school}`);
+      response.location = parseJson(`${response.location}`);
+      response.quote = parseJson(`${response.quote}`);
+
 
       return response;
     } catch (error: any) {
@@ -139,17 +147,24 @@ export class UserCache extends BaseCache {
       const replies: UserCacheMultiType = (await multi.exec()) as UserCacheMultiType;
       const userReplies: IUserDocument[] = [];
 
-      for (const user of replies as IUserDocument[]) {
-        user.createdAt = new Date(parseJson(`${user.createdAt}`));
-        user.postsCount = parseJson(`${user.postsCount}`);
-        user.blocked = parseJson(`${user.blocked}`);
-        user.blockedBy = parseJson(`${user.blockedBy}`);
-        user.notifications = parseJson(`${user.notifications}`);
-        user.social = parseJson(`${user.social}`);
-        user.followersCount = parseJson(`${user.followersCount}`);
-        user.followingCount = parseJson(`${user.followingCount}`);
+      for (const reply of replies as IUserDocument[]) {
+        reply.createdAt = new Date(parseJson(`${reply.createdAt}`));
+        reply.postsCount = parseJson(`${reply.postsCount}`);
+        reply.blocked = parseJson(`${reply.blocked}`);
+        reply.blockedBy = parseJson(`${reply.blockedBy}`);
+        reply.notifications = parseJson(`${reply.notifications}`);
+        reply.social = parseJson(`${reply.social}`);
+        reply.followersCount = parseJson(`${reply.followersCount}`);
+        reply.followingCount = parseJson(`${reply.followingCount}`);
+        reply.bgImageId = parseJson(`${reply.bgImageId}`);
+        reply.bgImageVersion = parseJson(`${reply.bgImageVersion}`);
+        reply.profilePicture = parseJson(`${reply.profilePicture}`);
+        reply.work = parseJson(`${reply.work}`);
+        reply.school = parseJson(`${reply.school}`);
+        reply.location = parseJson(`${reply.location}`);
+        reply.quote = parseJson(`${reply.quote}`);
 
-        userReplies.push(user);
+        userReplies.push(reply);
       }
 
       return userReplies;
@@ -193,15 +208,22 @@ export class UserCache extends BaseCache {
       const myUserNameIndex: number = findIndex(replies, ["username", excludedUsername]);
       replies.splice(myUserNameIndex, 1);
 
-      for (const user of replies) {
-        user.createdAt = new Date(parseJson(`${user.createdAt}`));
-        user.postsCount = parseJson(`${user.postsCount}`);
-        user.blocked = parseJson(`${user.blocked}`);
-        user.blockedBy = parseJson(`${user.blockedBy}`);
-        user.notifications = parseJson(`${user.notifications}`);
-        user.social = parseJson(`${user.social}`);
-        user.followersCount = parseJson(`${user.followersCount}`);
-        user.followingCount = parseJson(`${user.followingCount}`);
+      for (const reply of replies) {
+        reply.createdAt = new Date(parseJson(`${reply.createdAt}`));
+        reply.postsCount = parseJson(`${reply.postsCount}`);
+        reply.blocked = parseJson(`${reply.blocked}`);
+        reply.blockedBy = parseJson(`${reply.blockedBy}`);
+        reply.notifications = parseJson(`${reply.notifications}`);
+        reply.social = parseJson(`${reply.social}`);
+        reply.followersCount = parseJson(`${reply.followersCount}`);
+        reply.followingCount = parseJson(`${reply.followingCount}`);
+        reply.bgImageId = parseJson(`${reply.bgImageId}`);
+        reply.bgImageVersion = parseJson(`${reply.bgImageVersion}`);
+        reply.profilePicture = parseJson(`${reply.profilePicture}`);
+        reply.work = parseJson(`${reply.work}`);
+        reply.school = parseJson(`${reply.school}`);
+        reply.location = parseJson(`${reply.location}`);
+        reply.quote = parseJson(`${reply.quote}`);
       }
 
       return replies;

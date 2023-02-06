@@ -32,10 +32,9 @@ export class ReactionRedisCache extends BaseCache {
             throw new ServerError("Could not connect to Redis server!")
         }
     }
-    public async removePostReactionFromCache(key: string, username: string,
-        postReactions: IReactions): Promise<void> {
+    public async removePostReactionFromCache(key: string, username: string, postReactions: IReactions): Promise<void> {
         try {
-            console.log(postReactions)
+            console.log("posts reactions", postReactions)
             const response: string[] = await this.client.LRANGE(`reactions:${key}`, 0, -1)
             const multi: ReturnType<typeof this.client.multi> = this.client.multi();
             const userPreviousReaction: IReactionDocument = this.getPreviousReaction(response, username) as IReactionDocument

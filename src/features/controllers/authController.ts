@@ -68,7 +68,7 @@ const authCtrl = {
       imgVersion: result.version.toString(),
     });
 
-    res.status(HTTP_STATUS.OK).json({ jwtAccess, userDataForCache });
+    res.status(HTTP_STATUS.OK).json({ token: jwtAccess, user: userDataForCache, message: "You logged in successfully" });
   },
   /* --------------------------------------LOGIN------------------------------------------------------- */
   login: async (req: Request, res: Response): Promise<void> => {
@@ -82,6 +82,7 @@ const authCtrl = {
       const userSubject: IUserDocument = (await User.findOne({
         authId: user._id,
       }).select("-password")) as IUserDocument;
+      //console.log(userSubject)
       const jwtAccess: string = createAccessToken(user, userSubject._id as ObjectId);
       req.session = { jwt: jwtAccess };
       const userDocument: IUserDocument = {
@@ -93,7 +94,7 @@ const authCtrl = {
         uId: user.uId,
       } as IUserDocument;
 
-      res.status(HTTP_STATUS.OK).json({ jwtAccess, userDocument });
+      res.status(HTTP_STATUS.OK).json({ token: jwtAccess, user: userDocument, message: "You logged in successfully" });
     } else {
       res.status(HTTP_STATUS.NOT_FOUND).json({ message: `User ${username} not found` });
     }
