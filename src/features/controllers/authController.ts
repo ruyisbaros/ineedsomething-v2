@@ -82,7 +82,7 @@ const authCtrl = {
       const userSubject: IUserDocument = (await User.findOne({
         authId: user._id,
       }).select("-password")) as IUserDocument;
-      //console.log(userSubject)
+      console.log("user Object", userSubject)
       const jwtAccess: string = createAccessToken(user, userSubject._id as ObjectId);
       req.session = { jwt: jwtAccess };
       const userDocument: IUserDocument = {
@@ -102,6 +102,7 @@ const authCtrl = {
   /* --------------------------------------LOGOUT------------------------------------------------------- */
   logout: async (req: Request, res: Response): Promise<void> => {
     req.session = null;
+    console.log(req.session, req.currentUser)
     res.status(HTTP_STATUS.OK).json({ message: "You have logged out successfully", user: {}, jwt: "" });
   },
   /* --------------------------------------FORGOT PASSWORD------------------------------------------------------- */

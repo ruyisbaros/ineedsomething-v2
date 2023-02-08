@@ -98,28 +98,36 @@ export class PostCache extends BaseCache {
   }
 
   public async getPostsFromRedisCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
-    try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-      const response: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
-      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      for (const value of response) {
-        multi.HGETALL(`posts:${value}`);
-      }
+    const isKeyExists: string[] = await this.client.HKEYS(key)
+    console.log(isKeyExists)
+    if (!this.client.isOpen) {
+      await this.client.connect();
+    }
+    if (isKeyExists.length) {
+      try {
+        const response: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
 
-      const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
-      const postReplies: IPostDocument[] = [];
-      for (const post of replies as IPostDocument[]) {
-        post.commentsCount = parseJson(`${post.commentsCount}`) as number;
-        post.createdAt = new Date(parseJson(`${post.createdAt}`)) as Date;
-        post.reactions = parseJson(`${post.reactions}`) as IReactions;
-        postReplies.push(post);
+        const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+        for (const value of response) {
+          multi.HGETALL(`posts:${value}`);
+        }
+
+        const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
+        const postReplies: IPostDocument[] = [];
+        for (const post of replies as IPostDocument[]) {
+          post.commentsCount = parseJson(`${post.commentsCount}`) as number;
+          post.createdAt = new Date(parseJson(`${post.createdAt}`)) as Date;
+          post.reactions = parseJson(`${post.reactions}`) as IReactions;
+          postReplies.push(post);
+        }
+        return postReplies;
       }
-      return postReplies;
-    } catch (error) {
-      log.error(error);
-      throw new ServerError("Could not connect to Redis server!");
+      catch (error) {
+        log.error(error);
+        throw new ServerError("Could not connect to Redis server!");
+      }
+    } else {
+      return []
     }
   }
 
@@ -137,30 +145,36 @@ export class PostCache extends BaseCache {
   }
 
   public async getPostsWithImageFromRedisCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
-    try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-      const response: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
-      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      for (const value of response) {
-        multi.HGETALL(`posts:${value}`);
-      }
-
-      const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
-      const postsWithImage: IPostDocument[] = [];
-      for (const post of replies as IPostDocument[]) {
-        if ((post.imgId && post.imgVersion) || post.gifUrl) {
-          post.commentsCount = parseJson(`${post.commentsCount}`) as number;
-          post.createdAt = new Date(parseJson(`${post.createdAt}`)) as Date;
-          post.reactions = parseJson(`${post.reactions}`) as IReactions;
-          postsWithImage.push(post);
+    const isKeyExists: string[] = await this.client.HKEYS(key)
+    if (!this.client.isOpen) {
+      await this.client.connect();
+    }
+    if (isKeyExists) {
+      try {
+        const response: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
+        const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+        for (const value of response) {
+          multi.HGETALL(`posts:${value}`);
         }
+
+        const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
+        const postsWithImage: IPostDocument[] = [];
+        for (const post of replies as IPostDocument[]) {
+          if ((post.imgId && post.imgVersion) || post.gifUrl) {
+            post.commentsCount = parseJson(`${post.commentsCount}`) as number;
+            post.createdAt = new Date(parseJson(`${post.createdAt}`)) as Date;
+            post.reactions = parseJson(`${post.reactions}`) as IReactions;
+            postsWithImage.push(post);
+          }
+        }
+        return postsWithImage;
       }
-      return postsWithImage;
-    } catch (error) {
-      log.error(error);
-      throw new ServerError("Could not connect to Redis server!");
+      catch (error) {
+        log.error(error);
+        throw new ServerError("Could not connect to Redis server!");
+      }
+    } else {
+      return []
     }
   }
 
@@ -193,28 +207,36 @@ export class PostCache extends BaseCache {
   }
 
   public async getPostsByUserFromRedisCache(key: string, uId: number): Promise<IPostDocument[]> {
-    try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-      const response: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true, BY: "SCORE" });
-      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      for (const value of response) {
-        multi.HGETALL(`posts:${value}`);
-      }
+    const isKeyExists: string[] = await this.client.HKEYS(key)
+    if (!this.client.isOpen) {
+      await this.client.connect();
+    }
 
-      const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
-      const postReplies: IPostDocument[] = [];
-      for (const post of replies as IPostDocument[]) {
-        post.commentsCount = parseJson(`${post.commentsCount}`) as number;
-        post.createdAt = new Date(parseJson(`${post.createdAt}`)) as Date;
-        post.reactions = parseJson(`${post.reactions}`) as IReactions;
-        postReplies.push(post);
+    if (isKeyExists) {
+      try {
+        const response: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true, BY: "SCORE" });
+        const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+        for (const value of response) {
+          multi.HGETALL(`posts:${value}`);
+        }
+
+        const replies: PostCacheMultiType = (await multi.exec()) as PostCacheMultiType;
+        const postReplies: IPostDocument[] = [];
+        for (const post of replies as IPostDocument[]) {
+          post.commentsCount = parseJson(`${post.commentsCount}`) as number;
+          post.createdAt = new Date(parseJson(`${post.createdAt}`)) as Date;
+          post.reactions = parseJson(`${post.reactions}`) as IReactions;
+          postReplies.push(post);
+        }
+        return postReplies;
+
+      } catch (error) {
+        console.log(error);
+        throw new ServerError("Could not connect to Redis server!");
+
       }
-      return postReplies;
-    } catch (error) {
-      console.log(error);
-      throw new ServerError("Could not connect to Redis server!");
+    } else {
+      return []
     }
   }
 

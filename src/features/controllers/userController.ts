@@ -41,7 +41,7 @@ const userCtrl = {
     const { userId, username, uId } = req.params;
     const cachedUser: IUserDocument = (await userCache.getUserFromRedisCache(userId)) as IUserDocument;
     const cachedUserPosts: IPostDocument[] = await postCache.getPostsByUserFromRedisCache("post", parseInt(uId, 10));
-    const user: IUserDocument = cachedUser ? cachedUser : ((await userService.findUserByUserId(userId)) as IUserDocument);
+    const user: IUserDocument = (cachedUser.email && cachedUser.username) ? cachedUser : ((await userService.findUserByUserId(userId)) as IUserDocument);
 
     const userPosts: IPostDocument[] = cachedUserPosts.length
       ? cachedUserPosts
@@ -139,7 +139,10 @@ const userCtrl = {
     let token = null;
     let user = null;
     const cachedUser: IUserDocument = (await userCache.getUserFromRedisCache(`${req.currentUser?.userId}`)) as IUserDocument;
-    const existingUser: IUserDocument = cachedUser ? cachedUser : ((await userService.findUserByUserId(req.currentUser?.userId!)) as IUserDocument);
+
+    const existingUser: IUserDocument = (cachedUser.email && cachedUser.username) ? cachedUser : ((await userService.findUserByUserId(req.currentUser?.userId!)) as IUserDocument);
+    //console.log(Object.keys(cachedUser).values(), req.currentUser)
+    console.log(existingUser)
     if (Object.keys(existingUser).length) {
       isUser = true;
       token = req.session?.jwt;

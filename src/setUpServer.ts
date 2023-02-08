@@ -52,12 +52,14 @@ export class MyServer {
   }
 
   private securityMiddleware(app: Application): void {
+    app.set("trust proxy", 1)
     app.use(
       cookieSession({
         name: "session",
         keys: [config.KEY_ONE!, config.KEY_TWO!],
         maxAge: 7 * 24 * 60 * 60 * 1000, //7 days
         secure: config.NODE_ENV === "production",
+        sameSite: "none"  //use for production
       })
     );
     app.use(helmet());

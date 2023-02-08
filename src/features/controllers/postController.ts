@@ -180,7 +180,10 @@ const postCtrl = {
     const newSkip: number = skip === 0 ? skip : skip + 1;
     let posts: IPostDocument[] = [];
     let totalPosts: number = 0;
+    console.log("hello")
+    console.log(req.currentUser)
     const cachedPosts: IPostDocument[] = await postCache.getPostsFromRedisCache("post", newSkip, limit);
+    console.log(cachedPosts)
     if (cachedPosts.length) {
       console.log("from cache");
       posts = cachedPosts;
