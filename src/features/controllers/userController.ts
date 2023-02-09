@@ -138,11 +138,12 @@ const userCtrl = {
     let isUser = false;
     let token = null;
     let user = null;
+    console.log("current user user controller:", req.currentUser)
     const cachedUser: IUserDocument = (await userCache.getUserFromRedisCache(`${req.currentUser?.userId}`)) as IUserDocument;
 
     const existingUser: IUserDocument = (cachedUser.email && cachedUser.username) ? cachedUser : ((await userService.findUserByUserId(req.currentUser?.userId!)) as IUserDocument);
     //console.log(Object.keys(cachedUser).values(), req.currentUser)
-    console.log(existingUser)
+    console.log("existing user user controller", existingUser)
     if (Object.keys(existingUser).length) {
       isUser = true;
       token = req.session?.jwt;

@@ -183,7 +183,7 @@ const postCtrl = {
     console.log("hello")
     console.log(req.currentUser)
     const cachedPosts: IPostDocument[] = await postCache.getPostsFromRedisCache("post", newSkip, limit);
-    console.log(cachedPosts)
+    //console.log(cachedPosts)
     if (cachedPosts.length) {
       console.log("from cache");
       posts = cachedPosts;

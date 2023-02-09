@@ -22,6 +22,7 @@ import { omit } from "lodash";
 import moment from "moment";
 import publicIp from "ip";
 import crypto from "crypto";
+import { AuthPayload } from './../interfaces/auth.interfaces';
 
 const userCache: UserCache = new UserCache();
 
@@ -59,7 +60,7 @@ const authCtrl = {
     userQueue.addUserJob("addNewUser", { value: omittedData });
     //Create Token
     const jwtAccess: string = createAccessToken(newAuth, userObjId);
-    if (jwtAccess) req.session = { jwt: jwtAccess };
+    if (jwtAccess) { req.session = { jwt: jwtAccess }; }
 
     //Save image in DB
     imageQueue.addImageJob("createImg", {
@@ -82,9 +83,10 @@ const authCtrl = {
       const userSubject: IUserDocument = (await User.findOne({
         authId: user._id,
       }).select("-password")) as IUserDocument;
-      console.log("user Object", userSubject)
+      console.log("user Object and logged user login", userSubject, user)
       const jwtAccess: string = createAccessToken(user, userSubject._id as ObjectId);
       req.session = { jwt: jwtAccess };
+      //console.log("login session", req.session)
       const userDocument: IUserDocument = {
         ...userSubject,
         username: user.username,
@@ -102,7 +104,8 @@ const authCtrl = {
   /* --------------------------------------LOGOUT------------------------------------------------------- */
   logout: async (req: Request, res: Response): Promise<void> => {
     req.session = null;
-    console.log(req.session, req.currentUser)
+    req.currentUser = undefined
+    //Sconsole.log("in logout func:::", req.session, req.currentUser)
     res.status(HTTP_STATUS.OK).json({ message: "You have logged out successfully", user: {}, jwt: "" });
   },
   /* --------------------------------------FORGOT PASSWORD------------------------------------------------------- */

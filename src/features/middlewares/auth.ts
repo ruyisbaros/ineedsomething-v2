@@ -12,7 +12,8 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
     try {
         const token = req.session?.jwt;
         //const token = req.headers.authorization;
-        //console.log(token)
+        //console.log("middleware session", req.session)
+        //console.log("tokan", token)
         if (!token) {
             return res.status(401).json({ message: "You should Sign In!" });
         }

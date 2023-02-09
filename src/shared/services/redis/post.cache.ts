@@ -98,13 +98,13 @@ export class PostCache extends BaseCache {
   }
 
   public async getPostsFromRedisCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
-    const isKeyExists: string[] = await this.client.HKEYS(key)
-    console.log(isKeyExists)
-    if (!this.client.isOpen) {
-      await this.client.connect();
-    }
-    if (isKeyExists.length) {
-      try {
+    /* const isKeyExists: string[] = await this.client.HKEYS(key)
+    console.log(isKeyExists) */
+
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
         const response: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
 
         const multi: ReturnType<typeof this.client.multi> = this.client.multi();
@@ -126,9 +126,6 @@ export class PostCache extends BaseCache {
         log.error(error);
         throw new ServerError("Could not connect to Redis server!");
       }
-    } else {
-      return []
-    }
   }
 
   public async getTotalPostsCountFromRedisCache(): Promise<number> {
@@ -145,12 +142,12 @@ export class PostCache extends BaseCache {
   }
 
   public async getPostsWithImageFromRedisCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
-    const isKeyExists: string[] = await this.client.HKEYS(key)
-    if (!this.client.isOpen) {
-      await this.client.connect();
-    }
-    if (isKeyExists) {
-      try {
+    //const isKeyExists: string[] = await this.client.HKEYS(key)
+
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
         const response: string[] = await this.client.ZRANGE(key, start, end, { REV: true });
         const multi: ReturnType<typeof this.client.multi> = this.client.multi();
         for (const value of response) {
@@ -173,9 +170,7 @@ export class PostCache extends BaseCache {
         log.error(error);
         throw new ServerError("Could not connect to Redis server!");
       }
-    } else {
-      return []
-    }
+
   }
 
   public async getPostsWithVideoFromRedisCache(key: string, start: number, end: number): Promise<IPostDocument[]> {
@@ -207,13 +202,12 @@ export class PostCache extends BaseCache {
   }
 
   public async getPostsByUserFromRedisCache(key: string, uId: number): Promise<IPostDocument[]> {
-    const isKeyExists: string[] = await this.client.HKEYS(key)
-    if (!this.client.isOpen) {
-      await this.client.connect();
-    }
+    //const isKeyExists: string[] = await this.client.HKEYS(key)
 
-    if (isKeyExists) {
-      try {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
         const response: string[] = await this.client.ZRANGE(key, uId, uId, { REV: true, BY: "SCORE" });
         const multi: ReturnType<typeof this.client.multi> = this.client.multi();
         for (const value of response) {
@@ -235,9 +229,7 @@ export class PostCache extends BaseCache {
         throw new ServerError("Could not connect to Redis server!");
 
       }
-    } else {
-      return []
-    }
+
   }
 
   public async getTotalPostsCountByUserFromRedisCache(uId: number): Promise<number> {
